@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load humanize ladle_extras %}
+{% block title %}{{ collection.name }} · Ladle Kitchen Cookbook{% endblock %}
+
+{% block content %}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <a href="{% url 'collections:list' %}">Collections</a><span aria-hidden="true">/</span><span aria-current="page">{{ collection.name }}</span>
+</nav>
+
+<div class="page-head" data-num="02">
+  <div class="page-head-text">
+    <p class="eyebrow">Collection · {{ collection.member_count }} member{{ collection.member_count|pluralize }}</p>
+    <h1>{{ collection.name }}</h1>
+    {% if collection.description %}<p class="page-lede">{{ collection.description }}</p>{% endif %}
+    <ul class="meta-row">
+      <li><span class="pill {% if can_manage %}pill-accent{% else %}pill-muted{% endif %}">{% if can_manage %}Owner{% else %}Member{% endif %}</span></li>
+      <li class="meta-muted">Created {{ collection.created_at|naturaltime }} by {{ collection.owner.username }}</li>
+    </ul>
+  </div>
+</div>
+
+<div class="split">
+  {% include "partials/invite_panel.html" %}
+
+  <section class="panel" aria-labelledby="members-h">
+    <h2 id="members-h" data-num="02">Members</h2>
+    <ul class="member-list">
+      {% for row in member_rows %}
+        <li>
+          <span class="avatar" aria-hidden="true">{{ row.membership.user|initials }}</span>
+          <span class="member-name">{{ row.membership.user.username }}{% if row.membership.user.email %} <span class="muted">{{ row.membership.user.email }}</span>{% endif %}</span>
+          {% if row.is_owner %}<span class="pill pill-accent">Owner</span>{% endif %}
+          {% if row.can_remove %}
+            <form method="post" action="{% url 'collections:remove_member' collection.pk row.membership.user_id %}" class="inline-form" data-busy-form>
+              {% csrf_token %}
+              <button type="submit" class="btn btn-ghost btn-sm" data-busy-label="Removing…">Remove</button>
+            </form>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+    {% if is_member and not can_manage %}
+      <form method="post" action="{% url 'collections:leave' collection.pk %}" class="inline-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-ghost btn-sm">Leave this collection</button>
+      </form>
+    {% endif %}
+  </section>
+</div>
+
+<section class="collection-recipes" aria-labelledby="collection-recipes-h">
+  <h2 id="collection-recipes-h" data-num="03">Recipes <span class="count">{{ rows|length }}</span></h2>
+  {% if rows %}
+    <table class="data-table">
+      <caption class="visually-hidden">Recipes in {{ collection.name }}</caption>
+      <thead>
+        <tr>
+          <th scope="col">Recipe</th>
+          <th scope="col" class="cell-num">Servings</th>
+          <th scope="col">Added by</th>
+          <th scope="col">Added</th>
+          <th scope="col"><span class="visually-hidden">Actions</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr class="recipe-row">
+            <td data-label="Recipe">
+              <a class="recipe-title" href="{% url 'recipes:detail' row.entry.recipe.pk %}">{{ row.entry.recipe.title }}</a>
+              <span class="recipe-snippet">{{ row.entry.recipe.owner.username }}'s recipe</span>
+            </td>
+            <td class="cell-num" data-label="Servings">{{ row.entry.recipe.servings }}</td>
+            <td data-label="Added by">{{ row.entry.added_by.username }}</td>
+            <td class="cell-muted" data-label="Added">{{ row.entry.added_at|naturaltime }}</td>
+            <td class="cell-actions">
+              {% if row.can_remove %}
+                <form method="post" action="{% url 'collections:remove_recipe' collection.pk row.entry.recipe.pk %}" class="inline-form" data-busy-form>
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-ghost btn-sm" data-busy-label="Removing…">Remove</button>
+                </form>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="empty-state">
+      <p class="eyebrow">Nothing here yet</p>
+      <h2>This collection is empty</h2>
+      <p>Open any recipe and use the Collections panel to add it here.</p>
+      <a class="btn btn-primary" href="{% url 'recipes:library' %}">Browse the library</a>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,27 @@
+<section class="panel" aria-labelledby="collections-h">
+  <h2 id="collections-h" data-num="04">Collections</h2>
+  {% if collection_options %}
+    <ul class="collection-actions">
+      {% for option in collection_options %}
+        <li>
+          <a class="ca-name" href="{% url 'collections:detail' option.collection.pk %}">{{ option.collection.name }}</a>
+          {% if option.contains %}
+            <span class="pill pill-accent">Added</span>
+            <form method="post" action="{% url 'collections:remove_recipe' option.collection.pk recipe.pk %}" class="inline-form">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-ghost btn-sm">Remove</button>
+            </form>
+          {% else %}
+            <form method="post" action="{% url 'collections:add_recipe' option.collection.pk %}" class="inline-form" data-busy-form>
+              {% csrf_token %}
+              <input type="hidden" name="recipe_id" value="{{ recipe.pk }}">
+              <button type="submit" class="btn btn-secondary btn-sm" data-busy-label="Adding…">Add</button>
+            </form>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">You are not in a collection yet. <a href="{% url 'collections:list' %}">Create one</a> or <a href="{% url 'join' %}">join with a code</a>.</p>
+  {% endif %}
+</section>

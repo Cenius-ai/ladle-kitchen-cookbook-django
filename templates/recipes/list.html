@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load humanize ladle_extras %}
+{% block title %}Recipe library · Ladle Kitchen Cookbook{% endblock %}
+
+{% block content %}
+<div class="page-head" data-num="01">
+  <div class="page-head-text">
+    <p class="eyebrow">Cookbook library</p>
+    <h1>Recipes</h1>
+    <p class="page-lede">{{ total_recipes }} recipe{{ total_recipes|pluralize }} you own or share through a collection.</p>
+  </div>
+  <div class="page-head-actions">
+    <a class="btn btn-secondary" href="{% url 'recipes:import' %}">Paste JSON-LD</a>
+    <a class="btn btn-primary" href="{% url 'recipes:create' %}">New recipe</a>
+  </div>
+</div>
+
+<form class="filter-bar" method="get" action="{% url 'recipes:library' %}" role="search">
+  <div class="filter-field">
+    <label class="visually-hidden" for="q">Search recipes by title</label>
+    <input id="q" name="q" type="search" value="{{ query }}" placeholder="Search titles…" autocomplete="off">
+  </div>
+  <div class="filter-field">
+    <label class="visually-hidden" for="collection-filter">Filter by collection</label>
+    <select id="collection-filter" name="collection">
+      <option value="">All collections</option>
+      {% for collection in collections %}
+        <option value="{{ collection.pk }}"{% if selected_collection and selected_collection.pk == collection.pk %} selected{% endif %}>{{ collection.name }} ({{ collection.recipe_total }})</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button class="btn btn-secondary" type="submit">Apply</button>
+  {% if has_filters %}<a class="link-button" href="{% url 'recipes:library' %}">Clear filters</a>{% endif %}
+</form>
+
+{% if recent and not has_filters %}
+<section class="recent" aria-labelledby="recent-h">
+  <h2 id="recent-h" class="recent-h">Recently touched</h2>
+  <ul class="recent-strip">
+    {% for recipe in recent %}
+      {% cover_art recipe as cover %}
+      <li class="recent-tile">
+        <a href="{% url 'recipes:detail' recipe.pk %}">
+          <img src="{% if recipe.image_url %}{{ recipe.image_url }}{% else %}{{ cover }}{% endif %}" alt="" width="120" height="80" loading="lazy" data-img-fallback="{{ cover }}">
+          <span class="recent-title">{{ recipe.title }}</span>
+          <span class="recent-meta">{{ recipe.updated_at|naturaltime }}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{% if recipes %}
+  <table class="data-table">
+    <caption class="visually-hidden">Recipes in your library</caption>
+    <thead>
+      <tr>
+        <th scope="col">Recipe</th>
+        <th scope="col" class="cell-num">Servings</th>
+        <th scope="col" class="cell-num">Per portion</th>
+        <th scope="col">Origin</th>
+        <th scope="col">Updated</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for recipe in recipes %}
+        {% include "partials/recipe_card.html" with recipe=recipe %}
+      {% endfor %}
+    </tbody>
+  </table>
+{% elif has_filters %}
+  <div class="empty-state">
+    <p class="eyebrow">No matches</p>
+    <h2>Nothing matched {% if query %}“{{ query }}”{% else %}that collection{% endif %}</h2>
+    <p>Try a shorter title, or clear the filters to see all {{ total_recipes }} recipe{{ total_recipes|pluralize }}.</p>
+    <a class="btn btn-secondary" href="{% url 'recipes:library' %}">Clear filters</a>
+  </div>
+{% else %}
+  <div class="empty-state">
+    <p class="eyebrow">Empty shelf</p>
+    <h2>Your library is empty</h2>
+    <p>Start with a paste: copy a recipe page's JSON-LD block and Ladle turns it into ingredients, steps and per-portion nutrition.</p>
+    <div class="empty-actions">
+      <a class="btn btn-primary" href="{% url 'recipes:import' %}">Paste a recipe</a>
+      <a class="btn btn-secondary" href="{% url 'recipes:create' %}">Add one by hand</a>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

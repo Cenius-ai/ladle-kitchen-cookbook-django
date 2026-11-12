@@ -1,0 +1,45 @@
+{% load static ladle_extras %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Ladle Kitchen Cookbook{% endblock %}</title>
+  <meta name="description" content="Ladle Kitchen Cookbook: a lean, self-hosted recipe library with one-paste JSON-LD import, per-portion nutrition, household collections and a cook-along mode.">
+  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'css/fonts.css' %}">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body data-palette="{{ palette_json }}">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  {% include "partials/nav.html" %}
+
+  {% if messages %}
+    <div class="flash-zone" role="status" aria-live="polite">
+      {% for message in messages %}
+        <p class="flash flash-{{ message.tags }}">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <main id="main" class="shell">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-foot">
+    <p>Ladle Kitchen Cookbook — self-hosted, single SQLite file, zero outbound calls.</p>
+    <p class="site-foot-meta"><a href="{% url 'recipes:library' %}">Library</a> · <a href="{% url 'collections:list' %}">Collections</a> · <a href="{% url 'recipes:import' %}">Import</a></p>
+  </footer>
+
+  <div class="cmdk" data-cmdk hidden>
+    <div class="cmdk-panel" role="dialog" aria-modal="true" aria-labelledby="cmdk-title">
+      <h2 id="cmdk-title" class="visually-hidden">Jump to a recipe, collection or page</h2>
+      <input class="cmdk-input" data-cmdk-input type="text" role="combobox" aria-expanded="true" aria-controls="cmdk-results" aria-autocomplete="list" autocomplete="off" spellcheck="false" placeholder="Jump to a recipe, collection or page…">
+      <ul class="cmdk-results" id="cmdk-results" data-cmdk-results role="listbox" aria-label="Jump targets"></ul>
+      <p class="cmdk-hint"><span aria-hidden="true">↑ ↓</span> move · <span aria-hidden="true">↵</span> open · <span aria-hidden="true">esc</span> close</p>
+    </div>
+  </div>
+
+  <script src="{% static 'js/app.js' %}" defer></script>
+</body>
+</html>

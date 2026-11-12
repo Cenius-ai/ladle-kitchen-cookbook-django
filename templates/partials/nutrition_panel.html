@@ -1,0 +1,55 @@
+{% load ladle_extras %}
+<section class="panel nutrition" aria-labelledby="nutrition-h">
+  <h2 id="nutrition-h" data-num="03">Nutrition</h2>
+  <p class="panel-note">Per portion · batch of {{ recipe.servings }}</p>
+
+  {% if nutrition_source == 'none' %}
+    <div class="nutrition-empty">
+      <p>This recipe arrived without nutrition figures. Add them by hand and they stay badged as manual.</p>
+    </div>
+  {% else %}
+    <p><span class="pill {% if nutrition_source == 'manual' %}pill-accent{% else %}pill-muted{% endif %}">{{ nutrition_source|capfirst }} figures</span></p>
+    <dl class="nutrient-grid">
+      {% for field in nutrition_fields %}
+        {% with label=nutrition_labels|get_item:field unit=nutrition_units|get_item:field value=per_portion|get_item:field total=batch|get_item:field %}
+          <div class="nutrient">
+            <dt>{{ label }}<span class="nutrient-unit">{{ unit }}</span></dt>
+            <dd>
+              <span class="nutrient-value">{% if value is None %}—{% else %}{{ value|number }}{% endif %}</span>
+              <span class="nutrient-batch">{% if total is None %}—{% else %}{{ total|number }} {{ unit }} in the batch{% endif %}</span>
+            </dd>
+          </div>
+        {% endwith %}
+      {% endfor %}
+    </dl>
+  {% endif %}
+
+  {% if is_owner %}
+    <details class="override"{% if nutrition_source == 'none' %} open{% endif %}>
+      <summary>{% if nutrition_source == 'manual' %}Edit manual override{% else %}Add manual override{% endif %}</summary>
+      <form method="post" action="{% url 'recipes:nutrition' recipe.pk %}" class="form form-compact" data-busy-form novalidate>
+        {% csrf_token %}
+        <div class="field-grid">
+          {% for field in override_form %}
+            <div class="field{% if field.errors %} field-invalid{% endif %}">
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {% for error in field.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+        {% for error in override_form.non_field_errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        <p class="field-help">Per portion. Leave a field blank to record fewer figures.</p>
+        <button type="submit" class="btn btn-primary btn-sm" data-busy-label="Saving…">Save override</button>
+      </form>
+    </details>
+    {% if nutrition_source == 'manual' %}
+      <form method="post" action="{% url 'recipes:nutrition_clear' recipe.pk %}" class="inline-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-ghost btn-sm">Clear override</button>
+      </form>
+    {% endif %}
+  {% else %}
+    <p class="muted">Only {{ recipe.owner.username }} can change these figures.</p>
+  {% endif %}
+</section>

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Create account · Ladle Kitchen Cookbook{% endblock %}
+
+{% block content %}
+<section class="auth-wrap auth-wrap-single">
+  <div class="auth-card" data-num="02">
+    <p class="eyebrow">New cook</p>
+    <h1 class="auth-title">Create your account</h1>
+    <p class="auth-lede">Your recipes, collections and nutrition overrides stay on your own server.</p>
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-error" role="alert">
+        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'auth:register' %}" class="form" data-busy-form novalidate>
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field{% if field.errors %} field-invalid{% endif %}">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}<p class="field-help">{{ field.help_text }}</p>{% endif %}
+          {% for error in field.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+        </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary btn-block" data-busy-label="Creating account…">Create account</button>
+    </form>
+
+    <p class="auth-switch">Already cooking with Ladle? <a href="{% url 'auth:login' %}">Sign in</a></p>
+  </div>
+</section>
+{% endblock %}

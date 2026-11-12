@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load humanize ladle_extras %}
+{% block title %}{{ recipe.title }} · Ladle Kitchen Cookbook{% endblock %}
+
+{% block content %}
+{% cover_art recipe as cover %}
+<article class="recipe-detail">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="{% url 'recipes:library' %}">Recipes</a><span aria-hidden="true">/</span><span aria-current="page">{{ recipe.title }}</span>
+  </nav>
+
+  <header class="detail-head">
+    <div class="detail-media">
+      <img src="{% if recipe.image_url %}{{ recipe.image_url }}{% else %}{{ cover }}{% endif %}" alt="" width="640" height="400" data-img-fallback="{{ cover }}">
+    </div>
+    <div class="detail-head-text">
+      <p class="eyebrow">{{ recipe.get_origin_display }} · added by {{ recipe.owner.username }}</p>
+      <h1>{{ recipe.title }}</h1>
+      {% if recipe.description %}<p class="page-lede">{{ recipe.description }}</p>{% endif %}
+      <ul class="meta-row">
+        <li><span class="pill pill-accent">{{ recipe.servings }} servings</span></li>
+        <li><span class="pill pill-muted">{{ recipe.step_count }} step{{ recipe.step_count|pluralize }}</span></li>
+        {% if recipe.source_url %}
+          <li><a class="source-link" href="{{ recipe.source_url }}" target="_blank" rel="noopener noreferrer nofollow">Source ↗</a></li>
+        {% endif %}
+        <li class="meta-muted">Updated {{ recipe.updated_at|naturaltime }}</li>
+      </ul>
+      <div class="detail-actions">
+        {% if recipe.steps %}
+          <a class="btn btn-primary" href="{% url 'recipes:cook' recipe.pk %}">Start cook-along</a>
+        {% endif %}
+        {% if is_owner %}
+          <a class="btn btn-secondary" href="{% url 'recipes:edit' recipe.pk %}">Edit recipe</a>
+        {% endif %}
+      </div>
+    </div>
+  </header>
+
+  <div class="detail-grid">
+    <div class="detail-main">
+      <section class="panel" aria-labelledby="ingredients-h">
+        <h2 id="ingredients-h" data-num="01">Ingredients <span class="count">{{ ingredients|length }}</span></h2>
+        {% if ingredients %}
+          <ul class="ingredient-list">
+            {% for ingredient in ingredients %}
+              <li><span class="tick" aria-hidden="true"></span><span>{{ ingredient.text }}</span></li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="muted">No ingredients recorded yet.{% if is_owner %} <a href="{% url 'recipes:edit' recipe.pk %}">Add them</a>.{% endif %}</p>
+        {% endif %}
+      </section>
+
+      <section class="panel" aria-labelledby="steps-h">
+        <h2 id="steps-h" data-num="02">Method <span class="count">{{ recipe.step_count }}</span></h2>
+        {% if recipe.steps %}
+          <ol class="step-list">
+            {% for step in recipe.steps %}<li>{{ step }}</li>{% endfor %}
+          </ol>
+        {% else %}
+          <p class="muted">No steps yet.{% if is_owner %} <a href="{% url 'recipes:edit' recipe.pk %}">Write the method</a>.{% endif %}</p>
+        {% endif %}
+      </section>
+    </div>
+
+    <aside class="detail-side">
+      {% include "partials/nutrition_panel.html" %}
+      {% include "partials/add_to_collection.html" %}
+      {% if is_owner %}
+        <section class="panel panel-quiet" aria-labelledby="danger-h">
+          <h2 id="danger-h" class="h-sm" data-num="05">Owner actions</h2>
+          <p class="muted">Deleting removes this recipe, its ingredients and its place in every collection.</p>
+          <a class="btn btn-danger btn-sm" href="{% url 'recipes:delete' recipe.pk %}">Delete recipe</a>
+        </section>
+      {% endif %}
+    </aside>
+  </div>
+</article>
+{% endblock %}

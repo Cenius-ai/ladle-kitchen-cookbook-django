@@ -1,0 +1,22 @@
+{% load ladle_extras %}
+<section class="panel invite-panel" aria-labelledby="invite-h">
+  <h2 id="invite-h" data-num="01">Invite the household</h2>
+  {% if can_manage %}
+    <p class="panel-note">Anyone with this code can join the collection.</p>
+    <p class="invite-code"><code>{{ collection.invite_code }}</code></p>
+    <div class="field">
+      <label for="join-link">Join link</label>
+      <input id="join-link" type="text" value="{{ join_link }}" readonly data-copy-source>
+    </div>
+    <div class="invite-actions">
+      <button type="button" class="btn btn-secondary btn-sm" data-copy-target="join-link">Copy link</button>
+      <form method="post" action="{% url 'collections:invite' collection.pk %}" class="inline-form" data-busy-form>
+        {% csrf_token %}
+        <button type="submit" class="btn btn-ghost btn-sm" data-busy-label="Regenerating…">Regenerate code</button>
+      </form>
+    </div>
+    <p class="field-help" data-copy-status role="status" aria-live="polite">Regenerating retires the old link immediately.</p>
+  {% else %}
+    <p class="muted">The owner manages the invite code for this collection.</p>
+  {% endif %}
+</section>

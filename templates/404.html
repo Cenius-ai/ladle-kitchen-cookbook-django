@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Not found · Ladle Kitchen Cookbook{% endblock %}
+
+{% block content %}
+<div class="empty-state">
+  <p class="eyebrow">404</p>
+  <h1>That page is not in this kitchen</h1>
+  <p>The recipe or collection may have been deleted, or it belongs to another cook.</p>
+  <div class="empty-actions">
+    <a class="btn btn-primary" href="{% url 'recipes:library' %}">Back to the library</a>
+    <a class="btn btn-secondary" href="{% url 'collections:list' %}">Collections</a>
+  </div>
+</div>
+{% endblock %}

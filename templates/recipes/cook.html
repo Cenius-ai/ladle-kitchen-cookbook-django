@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Cook-along: {{ recipe.title }} · Ladle Kitchen Cookbook{% endblock %}
+
+{% block content %}
+<article class="cook" data-cook-along data-cook-step-count="{{ step_count }}" data-step-count="{{ step_count }}">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="{% url 'recipes:detail' recipe.pk %}">← {{ recipe.title }}</a>
+  </nav>
+
+  {% if steps %}
+    <header class="cook-head">
+      <p class="eyebrow">Cook-along · {{ recipe.title }}</p>
+      <div class="cook-progress" role="progressbar" aria-valuemin="1" aria-valuemax="{{ step_count }}" aria-valuenow="1" aria-label="Step progress" data-cook-progressbar>
+        <span class="cook-progress-fill" data-cook-progress></span>
+      </div>
+      <p class="cook-counter" data-cook-counter>Step 1 of {{ step_count }}</p>
+    </header>
+
+    <ol class="cook-steps" data-cook-steps>
+      {% for step in steps %}
+        <li class="cook-step" data-cook-step="{{ forloop.counter0 }}" data-step="{{ forloop.counter0 }}"{% if forloop.first %} data-active="true"{% endif %}>
+          <p class="cook-step-text" data-cook-step-text>{{ step }}</p>
+        </li>
+      {% endfor %}
+    </ol>
+
+    <div class="cook-controls">
+      <button type="button" class="cook-btn" data-cook-action="back" data-cook-target="previous">← Back</button>
+      <button type="button" class="cook-btn" data-cook-action="repeat" data-cook-target="current">Repeat</button>
+      <button type="button" class="cook-btn cook-btn-primary" data-cook-action="next" data-cook-target="next">Next →</button>
+    </div>
+
+    <p class="muted cook-hint">Hands-free: tap Back / Repeat / Next, press the ← and → arrow keys, or turn on voice and say “next”, “back” or “repeat” — the microphone is only used while voice is on.</p>
+
+    <div class="cook-voice">
+      <button type="button" class="btn btn-secondary" data-voice-toggle aria-pressed="false">Voice: off</button>
+      <p class="cook-status" data-voice-status role="status" aria-live="polite">Voice off — taps and the arrow keys always work.</p>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <p class="eyebrow">No steps</p>
+      <h1 class="h-md">There are no steps to cook yet</h1>
+      <p>Write the method for “{{ recipe.title }}” and cook-along mode will page through it.</p>
+      {% if is_owner %}
+        <a class="btn btn-primary" href="{% url 'recipes:edit' recipe.pk %}">Add the method</a>
+      {% else %}
+        <a class="btn btn-secondary" href="{% url 'recipes:detail' recipe.pk %}">Back to the recipe</a>
+      {% endif %}
+    </div>
+  {% endif %}
+</article>
+{% endblock %}

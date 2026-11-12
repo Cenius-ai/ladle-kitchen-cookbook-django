@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}Import a recipe · Ladle Kitchen Cookbook{% endblock %}
+
+{% block content %}
+<div class="page-head" data-num="02">
+  <div class="page-head-text">
+    <p class="eyebrow">One paste</p>
+    <h1>Import a recipe</h1>
+    <p class="page-lede">Copy the schema.org JSON-LD from any recipe page and paste it below — nothing is fetched from the internet.</p>
+  </div>
+  <div class="page-head-actions">
+    <a class="btn btn-ghost" href="{% url 'recipes:library' %}">Back to the library</a>
+  </div>
+</div>
+
+<div class="import-grid">
+  <form method="post" action="{% url 'recipes:import' %}" class="panel form" data-busy-form novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="action" value="parse">
+    <div class="field">
+      <label for="jsonld">Recipe JSON-LD</label>
+      <p class="field-help">A bare Recipe object, a whole &lt;script type="application/ld+json"&gt; block, or an @graph array all work.</p>
+      <textarea id="jsonld" name="jsonld" rows="16" spellcheck="false" placeholder='{"@context": "https://schema.org", "@type": "Recipe", "name": "…"}'>{{ raw }}</textarea>
+    </div>
+    {% if error %}
+      <div class="alert alert-error" role="alert">
+        <p class="alert-title">That paste did not parse</p>
+        <p>{{ error }}</p>
+      </div>
+    {% endif %}
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" data-busy-label="Parsing…">Parse</button>
+    </div>
+  </form>
+
+  <aside class="import-side">
+    {% if parsed %}
+      <div class="panel preview" data-import-preview>
+        <p class="eyebrow">Parsed preview</p>
+        <h2 class="h-md">{{ parsed.title }}</h2>
+        <dl class="preview-grid">
+          <div><dt>Servings</dt><dd>{{ parsed.servings }}</dd></div>
+          <div><dt>Ingredients</dt><dd>{{ parsed.ingredient_count }}</dd></div>
+          <div><dt>Steps</dt><dd>{{ parsed.step_count }}</dd></div>
+          <div><dt>Calories</dt><dd>{% if parsed.has_nutrition %}{{ parsed.nutrition.calories|floatformat:"0" }} kcal{% else %}not stated{% endif %}</dd></div>
+        </dl>
+        {% if parsed.has_nutrition %}
+          <ul class="preview-nutrition">
+            {% for label, value, unit in parsed.nutrition_rows %}
+              <li><span>{{ label }}</span> <strong>{{ value }} {{ unit }}</strong></li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="muted">No nutrition in this JSON-LD — you can add a manual override after saving.</p>
+        {% endif %}
+        {% if parsed.source_url %}<p class="muted">Source: <span class="break-all">{{ parsed.source_url }}</span></p>{% endif %}
+
+        <details class="preview-details">
+          <summary>Show the parsed lines</summary>
+          <h3 class="h-sm">Ingredients</h3>
+          <ul class="ingredient-list ingredient-list-compact">
+            {% for ingredient in parsed.ingredients %}<li><span class="tick" aria-hidden="true"></span><span>{{ ingredient }}</span></li>{% endfor %}
+          </ul>
+          <h3 class="h-sm">Steps</h3>
+          {% if parsed.steps %}
+            <ol class="step-list">{% for step in parsed.steps %}<li>{{ step }}</li>{% endfor %}</ol>
+          {% else %}
+            <p class="muted">The JSON-LD carried no instructions — add them after saving.</p>
+          {% endif %}
+        </details>
+
+        <form method="post" action="{% url 'recipes:import' %}" class="form form-compact" data-busy-form>
+          {% csrf_token %}
+          <input type="hidden" name="action" value="save">
+          <textarea name="jsonld" hidden>{{ raw }}</textarea>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary" data-busy-label="Saving…">Save recipe</button>
+            <a class="btn btn-ghost" href="{% url 'recipes:import' %}">Discard</a>
+          </div>
+        </form>
+      </div>
+    {% else %}
+      <div class="panel panel-quiet">
+        <p class="eyebrow">Where to find it</p>
+        <p>On most recipe sites the block sits in the page source inside a &lt;script type="application/ld+json"&gt; tag. Select from the opening brace to the closing one and paste it whole.</p>
+        <details class="example">
+          <summary>Show an example paste</summary>
+          <pre class="code-block">{{ example }}</pre>
+        </details>
+        <p class="muted">Ladle reads the Recipe node out of an <code>@graph</code> too, so a paste straight from “view source” works.</p>
+      </div>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}

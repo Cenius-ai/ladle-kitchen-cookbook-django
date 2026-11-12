@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Join a collection · Ladle Kitchen Cookbook{% endblock %}
+
+{% block content %}
+<section class="auth-wrap auth-wrap-single">
+  <div class="auth-card" data-num="03">
+    <p class="eyebrow">Invite code</p>
+    <h1 class="auth-title">Join a collection</h1>
+    <p class="auth-lede">Paste the 10-character code — or the whole join link — that the owner sent you.</p>
+
+    {% if resolved %}
+      <div class="alert alert-info" role="status">
+        <p class="alert-title">{{ resolved.name }}</p>
+        <p>Owned by {{ resolved.owner.username }} · {{ resolved.recipe_count }} recipe{{ resolved.recipe_count|pluralize }}</p>
+      </div>
+    {% endif %}
+
+    <form method="post" action="{% if code %}{% url 'join_code' code %}{% else %}{% url 'join' %}{% endif %}" class="form" data-busy-form novalidate>
+      {% csrf_token %}
+      <div class="field{% if form.code.errors %} field-invalid{% endif %}">
+        <label for="{{ form.code.id_for_label }}">{{ form.code.label }}</label>
+        {{ form.code }}
+        <p class="field-help">{{ form.code.help_text }}</p>
+        {% for error in form.code.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" data-busy-label="Joining…">{% if resolved %}Join {{ resolved.name }}{% else %}Join collection{% endif %}</button>
+    </form>
+
+    <p class="auth-switch"><a href="{% url 'collections:list' %}">Back to your collections</a></p>
+  </div>
+</section>
+{% endblock %}

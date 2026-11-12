@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}{% if mode == 'edit' %}Edit {{ recipe.title }}{% else %}New recipe{% endif %} · Ladle Kitchen Cookbook{% endblock %}
+
+{% block content %}
+<div class="page-head" data-num="{% if mode == 'edit' %}04{% else %}03{% endif %}">
+  <div class="page-head-text">
+    <p class="eyebrow">{% if mode == 'edit' %}Edit recipe{% else %}By hand{% endif %}</p>
+    <h1>{% if mode == 'edit' %}{{ recipe.title }}{% else %}New recipe{% endif %}</h1>
+    <p class="page-lede">One ingredient per line and one step per line — Ladle numbers them for you.</p>
+  </div>
+  <div class="page-head-actions">
+    {% if mode == 'edit' %}
+      <a class="btn btn-ghost" href="{% url 'recipes:detail' recipe.pk %}">Cancel</a>
+    {% else %}
+      <a class="btn btn-ghost" href="{% url 'recipes:library' %}">Cancel</a>
+    {% endif %}
+  </div>
+</div>
+
+<form method="post" class="panel form recipe-form" data-busy-form novalidate>
+  {% csrf_token %}
+  {% if form.non_field_errors %}
+    <div class="alert alert-error" role="alert">
+      {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+    </div>
+  {% endif %}
+
+  <div class="field-grid">
+    <div class="field field-wide{% if form.title.errors %} field-invalid{% endif %}">
+      <label for="{{ form.title.id_for_label }}">{{ form.title.label }} <span class="req" aria-hidden="true">*</span></label>
+      {{ form.title }}
+      {% for error in form.title.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+    </div>
+
+    <div class="field field-wide{% if form.description.errors %} field-invalid{% endif %}">
+      <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+      {{ form.description }}
+      {% for error in form.description.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+    </div>
+
+    <div class="field{% if form.servings.errors %} field-invalid{% endif %}">
+      <label for="{{ form.servings.id_for_label }}">{{ form.servings.label }}</label>
+      {{ form.servings }}
+      <p class="field-help">{{ form.servings.help_text }}</p>
+      {% for error in form.servings.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+    </div>
+
+    <div class="field{% if form.image_url.errors %} field-invalid{% endif %}">
+      <label for="{{ form.image_url.id_for_label }}">{{ form.image_url.label }}</label>
+      {{ form.image_url }}
+      <p class="field-help">{{ form.image_url.help_text }}</p>
+      {% for error in form.image_url.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+    </div>
+
+    <div class="field field-wide{% if form.source_url.errors %} field-invalid{% endif %}">
+      <label for="{{ form.source_url.id_for_label }}">{{ form.source_url.label }}</label>
+      {{ form.source_url }}
+      <p class="field-help">{{ form.source_url.help_text }}</p>
+      {% for error in form.source_url.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+    </div>
+
+    <div class="field{% if form.ingredients_text.errors %} field-invalid{% endif %}">
+      <label for="{{ form.ingredients_text.id_for_label }}">{{ form.ingredients_text.label }} <span class="req" aria-hidden="true">*</span></label>
+      {{ form.ingredients_text }}
+      <p class="field-help">{{ form.ingredients_text.help_text }}</p>
+      {% for error in form.ingredients_text.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+    </div>
+
+    <div class="field{% if form.steps_text.errors %} field-invalid{% endif %}">
+      <label for="{{ form.steps_text.id_for_label }}">{{ form.steps_text.label }}</label>
+      {{ form.steps_text }}
+      <p class="field-help">{{ form.steps_text.help_text }}</p>
+      {% for error in form.steps_text.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+    </div>
+  </div>
+
+  <div class="form-actions form-actions-bar">
+    {% if mode == 'edit' %}
+      <a class="btn btn-ghost" href="{% url 'recipes:detail' recipe.pk %}">Cancel</a>
+    {% else %}
+      <a class="btn btn-ghost" href="{% url 'recipes:library' %}">Cancel</a>
+    {% endif %}
+    <button type="submit" class="btn btn-primary" data-busy-label="Saving…">{% if mode == 'edit' %}Save changes{% else %}Save recipe{% endif %}</button>
+  </div>
+</form>
+
+{% if mode == 'edit' %}
+  <section class="panel panel-quiet danger-zone" aria-labelledby="danger-zone-h">
+    <h2 id="danger-zone-h" class="h-sm">Danger zone</h2>
+    <p class="muted">Deleting is permanent. Every collection loses this recipe too.</p>
+    <a class="btn btn-danger btn-sm" href="{% url 'recipes:delete' recipe.pk %}">Delete this recipe</a>
+  </section>
+{% endif %}
+{% endblock %}

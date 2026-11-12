@@ -1,0 +1,21 @@
+{% load humanize ladle_extras %}{% if recipe %}{% cover_art recipe as cover %}
+<tr class="recipe-row">
+  <td class="cell-recipe" data-label="Recipe">
+    <div class="recipe-cell">
+      <span class="thumb">
+        <img src="{% if recipe.image_url %}{{ recipe.image_url }}{% else %}{{ cover }}{% endif %}" alt="" loading="lazy" width="56" height="56" data-img-fallback="{{ cover }}">
+      </span>
+      <span class="recipe-cell-text">
+        <a class="recipe-title" href="{% url 'recipes:detail' recipe.pk %}">{{ recipe.title }}</a>
+        {% if recipe.description %}<span class="recipe-snippet">{{ recipe.description|truncatechars:92 }}</span>{% endif %}
+      </span>
+    </div>
+  </td>
+  <td class="cell-num" data-label="Servings">{{ recipe.servings }}</td>
+  <td class="cell-num" data-label="Per portion">
+    {% with kcal=recipe.calories_per_portion %}{% if kcal is None %}<span class="muted">—</span>{% else %}{{ kcal|number }}<span class="unit"> kcal</span>{% endif %}{% endwith %}
+  </td>
+  <td data-label="Origin"><span class="pill {% if recipe.origin == 'imported' %}pill-accent{% else %}pill-muted{% endif %}">{{ recipe.get_origin_display }}</span></td>
+  <td class="cell-muted" data-label="Updated">{{ recipe.updated_at|naturaltime }}</td>
+</tr>
+{% endif %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load ladle_extras %}
+{% block title %}Sign in · Ladle Kitchen Cookbook{% endblock %}
+
+{% block content %}
+<section class="auth-wrap">
+  <div class="auth-card" data-num="01">
+    <p class="eyebrow">Household recipe library</p>
+    <h1 class="auth-title">Welcome back to the kitchen</h1>
+    <p class="auth-lede">Sign in to reach your recipes, nutrition panels and shared collections.</p>
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-error" role="alert">
+        {% for error in form.non_field_errors %}<p>{{ error }}</p>{% endfor %}
+      </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'auth:login' %}" class="form" data-busy-form novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}">
+      <div class="field{% if form.identifier.errors %} field-invalid{% endif %}">
+        <label for="{{ form.identifier.id_for_label }}">{{ form.identifier.label }}</label>
+        {{ form.identifier }}
+        {% for error in form.identifier.errors %}<p class="field-error" id="{{ form.identifier.id_for_label }}-error">{{ error }}</p>{% endfor %}
+      </div>
+      <div class="field{% if form.password.errors %} field-invalid{% endif %}">
+        <div class="field-head">
+          <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+          <button type="button" class="link-button" data-toggle-password="{{ form.password.id_for_label }}" aria-pressed="false">Show</button>
+        </div>
+        {{ form.password }}
+        {% for error in form.password.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+      </div>
+      <button type="submit" class="btn btn-primary btn-block" data-busy-label="Signing in…">Sign in</button>
+    </form>
+
+    <div class="demo-card">
+      <p class="demo-title">Demo account</p>
+      <p class="demo-line"><span>Email</span> <code>{{ demo_email }}</code></p>
+      <p class="demo-line"><span>Password</span> <code>{{ demo_password }}</code></p>
+      <form method="post" action="{% url 'auth:login' %}" class="inline-form" data-busy-form>
+        {% csrf_token %}
+        <input type="hidden" name="identifier" value="{{ demo_email }}">
+        <input type="hidden" name="password" value="{{ demo_password }}">
+        <button type="submit" class="btn btn-secondary btn-sm" data-busy-label="Signing in…">Sign in as the demo cook</button>
+      </form>
+    </div>
+
+    <p class="auth-switch">New here? <a href="{% url 'auth:register' %}">Create an account</a></p>
+  </div>
+
+  <aside class="auth-aside" aria-label="What Ladle does">
+    <p class="eyebrow">01 — Import</p>
+    <h2>Paste the JSON-LD, keep the recipe</h2>
+    <p>Copy a recipe page's <code>application/ld+json</code> block and paste it whole. Ladle pulls out the title, ingredients, steps and nutrition.</p>
+    <p class="eyebrow">02 — Cook</p>
+    <h2>Per-portion numbers, hands-free steps</h2>
+    <p>Every recipe shows what a portion costs, and cook-along mode pages by voice or thumb at the stove.</p>
+  </aside>
+</section>
+{% endblock %}

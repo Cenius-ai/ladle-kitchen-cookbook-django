@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}Collections · Ladle Kitchen Cookbook{% endblock %}
+
+{% block content %}
+<div class="page-head" data-num="01">
+  <div class="page-head-text">
+    <p class="eyebrow">Household cookbooks</p>
+    <h1>Collections</h1>
+    <p class="page-lede">Group recipes for the week, then let the whole household cook from them.</p>
+  </div>
+  <div class="page-head-actions">
+    <a class="btn btn-secondary" href="{% url 'join' %}">Join with a code</a>
+  </div>
+</div>
+
+<div class="split">
+  <section class="panel" aria-labelledby="create-collection-h">
+    <h2 id="create-collection-h" data-num="01">New collection</h2>
+    <form method="post" action="{% url 'collections:list' %}" class="form form-compact" data-busy-form novalidate>
+      {% csrf_token %}
+      <div class="field{% if form.name.errors %} field-invalid{% endif %}">
+        <label for="{{ form.name.id_for_label }}">{{ form.name.label }} <span class="req" aria-hidden="true">*</span></label>
+        {{ form.name }}
+        {% for error in form.name.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+      </div>
+      <div class="field{% if form.description.errors %} field-invalid{% endif %}">
+        <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+        {{ form.description }}
+        {% for error in form.description.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+      </div>
+      <button type="submit" class="btn btn-primary" data-busy-label="Creating…">Create collection</button>
+    </form>
+  </section>
+
+  <section class="panel panel-quiet" aria-labelledby="sharing-h">
+    <h2 id="sharing-h" data-num="02">How sharing works</h2>
+    <p>Every collection carries a 10-character invite code. Send it to a household member — they paste it on <a href="{% url 'join' %}">the join page</a> and the collection appears in their library.</p>
+    <p class="muted">Owners can regenerate the code at any time, which retires the old link.</p>
+  </section>
+</div>
+
+{% if rows %}
+  <table class="data-table">
+    <caption class="visually-hidden">Your collections</caption>
+    <thead>
+      <tr>
+        <th scope="col">Collection</th>
+        <th scope="col" class="cell-num">Recipes</th>
+        <th scope="col" class="cell-num">Members</th>
+        <th scope="col">Role</th>
+        <th scope="col">Created</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+        <tr class="recipe-row">
+          <td data-label="Collection">
+            <a class="recipe-title" href="{% url 'collections:detail' row.collection.pk %}">{{ row.collection.name }}</a>
+            {% if row.collection.description %}<span class="recipe-snippet">{{ row.collection.description|truncatechars:96 }}</span>{% endif %}
+          </td>
+          <td class="cell-num" data-label="Recipes">{{ row.collection.recipe_total }}</td>
+          <td class="cell-num" data-label="Members">{{ row.collection.member_total }}</td>
+          <td data-label="Role"><span class="pill {% if row.is_owner %}pill-accent{% else %}pill-muted{% endif %}">{% if row.is_owner %}Owner{% else %}Member{% endif %}</span></td>
+          <td class="cell-muted" data-label="Created">{{ row.collection.created_at|naturaltime }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <div class="empty-state">
+    <p class="eyebrow">No collections yet</p>
+    <h2>Start a household cookbook</h2>
+    <p>Create a collection above, then add recipes from any recipe page. Or paste an invite code someone sent you.</p>
+    <div class="empty-actions">
+      <a class="btn btn-primary" href="{% url 'join' %}">Paste an invite code</a>
+      <a class="btn btn-secondary" href="{% url 'recipes:library' %}">Browse recipes</a>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}
