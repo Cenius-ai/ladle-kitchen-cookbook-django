@@ -1,0 +1,269 @@
+{
+  "cooks": [
+    {
+      "username": "cenius",
+      "email": "cenius@cenius.ai",
+      "password": "cenius",
+      "first_name": "Cenius",
+      "is_staff": true,
+      "is_superuser": true
+    },
+    {
+      "username": "marta",
+      "email": "marta@ladle.local",
+      "password": "marta-ladle",
+      "first_name": "Marta"
+    }
+  ],
+  "collections": [
+    {
+      "key": "weeknight",
+      "name": "Weeknight Suppers",
+      "owner": "cenius",
+      "description": "Dinners that land on the table inside an hour, shared with the whole household.",
+      "invite_code": "SUPPERS24X",
+      "members": ["cenius", "marta"]
+    },
+    {
+      "key": "baking",
+      "name": "Weekend Baking",
+      "owner": "marta",
+      "description": "Slow Sunday bakes, kept by Marta and open to the house.",
+      "invite_code": "BAKEDAY042",
+      "members": ["marta", "cenius"]
+    }
+  ],
+  "recipes": [
+    {
+      "owner": "cenius",
+      "collections": ["weeknight"],
+      "updated_days_ago": 1,
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@type": "Recipe",
+        "name": "Lemon-garlic roast chicken with new potatoes",
+        "description": "One tray, crisp skin, and potatoes that soak up every drop of lemon-garlic butter.",
+        "url": "https://example.com/recipes/lemon-garlic-roast-chicken",
+        "recipeYield": "4 servings",
+        "recipeIngredient": [
+          "1 whole chicken, about 1.8 kg",
+          "800 g new potatoes, halved",
+          "1 lemon, zested and cut into wedges",
+          "5 garlic cloves, lightly crushed",
+          "3 tbsp olive oil",
+          "2 tsp flaky sea salt",
+          "1 tsp black pepper",
+          "4 sprigs fresh thyme",
+          "150 ml dry white wine"
+        ],
+        "recipeInstructions": [
+          {"@type": "HowToStep", "text": "Heat the oven to 200C fan. Pat the chicken dry and season the cavity generously with salt and pepper."},
+          {"@type": "HowToStep", "text": "Toss the potatoes with olive oil, lemon zest, garlic and thyme, then spread them around the roasting tin."},
+          {"@type": "HowToStep", "text": "Sit the chicken on top, rub the skin with the remaining oil and scatter over the lemon wedges."},
+          {"@type": "HowToStep", "text": "Pour the wine into the tin and roast for 20 minutes, then lower to 180C and roast for a further 40 minutes."},
+          {"@type": "HowToStep", "text": "Rest under foil for 15 minutes, then spoon the pan juices over the potatoes before serving."}
+        ],
+        "nutrition": {
+          "@type": "NutritionInformation",
+          "calories": "615 kcal",
+          "proteinContent": "46 g",
+          "carbohydrateContent": "38 g",
+          "fatContent": "29 g"
+        }
+      }
+    },
+    {
+      "owner": "cenius",
+      "collections": ["weeknight"],
+      "updated_days_ago": 4,
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@type": "Recipe",
+        "name": "Smoky black bean chilli",
+        "description": "A freezer-friendly chilli built on chipotle, cocoa and a slow-simmered base.",
+        "url": "https://example.com/recipes/smoky-black-bean-chilli",
+        "recipeYield": ["6 servings"],
+        "recipeIngredient": [
+          "2 tbsp olive oil",
+          "1 large onion, finely chopped",
+          "1 red pepper, diced",
+          "4 garlic cloves, minced",
+          "2 tbsp chipotle paste",
+          "1 tbsp cocoa powder",
+          "2 tsp ground cumin",
+          "2 x 400 g tins black beans, drained",
+          "1 x 400 g tin chopped tomatoes",
+          "300 ml vegetable stock",
+          "1 tsp dried oregano",
+          "Salt and lime juice, to finish"
+        ],
+        "recipeInstructions": [
+          {
+            "@type": "HowToSection",
+            "name": "Build the base",
+            "itemListElement": [
+              {"@type": "HowToStep", "text": "Warm the oil in a heavy pan and soften the onion and pepper for 8 minutes until sweet and translucent."},
+              {"@type": "HowToStep", "text": "Add the garlic, chipotle paste, cocoa and cumin and stir for 60 seconds so the spices bloom."}
+            ]
+          },
+          {
+            "@type": "HowToSection",
+            "name": "Simmer and finish",
+            "itemListElement": [
+              {"@type": "HowToStep", "text": "Tip in the beans, tomatoes, stock and oregano. Simmer uncovered for 25 minutes, stirring now and then."},
+              {"@type": "HowToStep", "text": "Mash a ladleful of beans against the side of the pan to thicken the sauce."},
+              {"@type": "HowToStep", "text": "Season with salt and a squeeze of lime, then serve with rice, soured cream and coriander."}
+            ]
+          }
+        ],
+        "nutrition": {
+          "@type": "NutritionInformation",
+          "calories": "385",
+          "proteinContent": "17",
+          "carbohydrateContent": "52",
+          "fatContent": "11"
+        }
+      }
+    },
+    {
+      "owner": "cenius",
+      "collections": ["weeknight"],
+      "updated_days_ago": 8,
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@type": "Recipe",
+        "name": "Miso butter mushroom risotto",
+        "description": "White miso and cold butter stirred in at the end make this taste like it took hours.",
+        "url": "https://example.com/recipes/miso-butter-mushroom-risotto",
+        "recipeYield": "4 servings",
+        "recipeIngredient": [
+          "1.2 litres hot vegetable stock",
+          "300 g arborio rice",
+          "350 g chestnut mushrooms, sliced",
+          "1 onion, finely diced",
+          "2 garlic cloves, minced",
+          "2 tbsp white miso",
+          "60 g cold butter, cubed",
+          "50 g parmesan, finely grated",
+          "1 tsp thyme leaves",
+          "Black pepper"
+        ],
+        "recipeInstructions": [
+          {"@type": "HowToStep", "text": "Fry the mushrooms in a dry pan until they squeak and brown, then set aside with the thyme."},
+          {"@type": "HowToStep", "text": "Soften the onion in a little butter, add the garlic and rice, and toast for 2 minutes until the grains look translucent at the edges."},
+          {"@type": "HowToStep", "text": "Add the stock a ladle at a time, stirring, for about 18 minutes until the rice is just tender."},
+          {"@type": "HowToStep", "text": "Stir the miso into the last ladle of stock, then beat in the cold butter and parmesan off the heat."},
+          {"@type": "HowToStep", "text": "Fold the mushrooms back in, grind over black pepper and rest for 2 minutes before serving."}
+        ],
+        "nutrition": {
+          "@type": "NutritionInformation",
+          "calories": "520 kcal",
+          "proteinContent": "14 g",
+          "carbohydrateContent": "68 g",
+          "fatContent": "21 g"
+        }
+      }
+    },
+    {
+      "owner": "cenius",
+      "collections": ["weeknight"],
+      "updated_days_ago": 12,
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@type": "Recipe",
+        "name": "Charred broccoli and tahini bowl",
+        "description": "A twenty-minute bowl: blistered broccoli, lemony grains and a tahini sauce that goes on everything.",
+        "url": "https://example.com/recipes/charred-broccoli-tahini-bowl",
+        "recipeYield": "2 servings",
+        "recipeIngredient": [
+          "2 heads broccoli, cut into long florets",
+          "1 tbsp olive oil",
+          "150 g bulgur wheat",
+          "2 tbsp tahini",
+          "1 lemon, juiced",
+          "1 garlic clove, grated",
+          "2 tbsp pomegranate seeds",
+          "1 tbsp toasted sesame seeds",
+          "Flaky salt"
+        ],
+        "recipeInstructions": [
+          "Heat a griddle pan until smoking, toss the broccoli in oil and salt, and char in batches for 3 minutes a side.",
+          "Cover the bulgur with boiling water and leave for 12 minutes, then fork through and season.",
+          "Loosen the tahini with lemon juice, garlic and 3 tbsp cold water until it pours.",
+          "Pile the grains into bowls, add the broccoli, spoon over the tahini and finish with pomegranate and sesame."
+        ],
+        "nutrition": {
+          "@type": "NutritionInformation",
+          "calories": "430 calories",
+          "proteinContent": "15 g",
+          "carbohydrateContent": "36 g",
+          "fatContent": "27 g"
+        }
+      }
+    },
+    {
+      "owner": "cenius",
+      "collections": ["weeknight"],
+      "updated_days_ago": 19,
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@type": "Recipe",
+        "name": "Harissa chickpea stew",
+        "description": "Pantry cooking at its best: rose harissa, chickpeas and a handful of spinach.",
+        "url": "https://example.com/recipes/harissa-chickpea-stew",
+        "recipeYield": "4 servings",
+        "recipeIngredient": [
+          "2 tbsp olive oil",
+          "1 onion, sliced",
+          "3 garlic cloves, sliced",
+          "2 tbsp rose harissa",
+          "1 tsp ground coriander",
+          "2 x 400 g tins chickpeas, drained",
+          "1 x 400 g tin chopped tomatoes",
+          "200 ml vegetable stock",
+          "100 g spinach",
+          "1 lemon, zested",
+          "Salt and pepper"
+        ],
+        "recipeInstructions": [
+          {"@type": "HowToStep", "text": "Soften the onion and garlic in olive oil over a medium heat for 8 minutes."},
+          {"@type": "HowToStep", "text": "Stir in the harissa and coriander and cook for a minute until fragrant."},
+          {"@type": "HowToStep", "text": "Add the chickpeas, tomatoes and stock, then simmer for 20 minutes until thickened."},
+          {"@type": "HowToStep", "text": "Wilt the spinach through, season, and finish with lemon zest."}
+        ]
+      }
+    },
+    {
+      "owner": "marta",
+      "collections": ["baking"],
+      "updated_days_ago": 3,
+      "jsonld": {
+        "@context": "https://schema.org",
+        "@type": "Recipe",
+        "name": "Brown butter banana bread",
+        "description": "Marta's loaf: nutty brown butter, three very ripe bananas and a crackly sugar top.",
+        "url": "https://example.com/recipes/brown-butter-banana-bread",
+        "recipeYield": "8 servings",
+        "recipeIngredient": [
+          "120 g unsalted butter",
+          "3 very ripe bananas, mashed",
+          "150 g light brown sugar",
+          "2 large eggs",
+          "1 tsp vanilla extract",
+          "200 g plain flour",
+          "1 tsp bicarbonate of soda",
+          "1/2 tsp fine salt",
+          "1 tbsp demerara sugar"
+        ],
+        "recipeInstructions": "Melt the butter in a small pan and cook until it smells nutty and the milk solids turn amber, then cool for 10 minutes.\nHeat the oven to 175C and line a 900 g loaf tin.\nWhisk the bananas, brown sugar, eggs, vanilla and brown butter until smooth.\nFold in the flour, bicarbonate of soda and salt until just combined, then scrape into the tin and scatter over the demerara.\nBake for 55 to 60 minutes until a skewer comes out with only a few crumbs, then cool in the tin for 15 minutes.",
+        "nutrition": {
+          "@type": "NutritionInformation",
+          "calories": "310 kcal",
+          "proteinContent": "4 g",
+          "carbohydrateContent": "42 g",
+          "fatContent": "14 g"
+        }
+      }
+    }
+  ]
+}

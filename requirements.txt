@@ -1,0 +1,5 @@
+Django==5.2.17
+# Test runner. The suite is plain Django TestCase code; these two make it
+# runnable both as `python3 manage.py test` and as `pytest`.
+pytest==8.4.2
+pytest-django==4.9.0
