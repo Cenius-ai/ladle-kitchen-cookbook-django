@@ -33,7 +33,7 @@ See [`INSTALL.md`](INSTALL.md) for full setup and usage instructions.
 
 ## Architecture
 
-Django project, delivered as a complete runnable codebase (99 files). Top-level layout: `cookbook/`, `ladle/`, `static/`, `templates/`. The setup script (`install.sh`) installs runtime dependencies and loads a starter dataset so the app is immediately usable. See [`INSTALL.md`](INSTALL.md) for complete setup instructions.
+Django project, delivered as a complete runnable codebase (86 files). Top-level layout: `cookbook/`, `ladle/`, `static/`, `templates/`. The setup script (`install.sh`) installs runtime dependencies and loads a starter dataset so the app is immediately usable. See [`INSTALL.md`](INSTALL.md) for complete setup instructions.
 
 ## Features
 
